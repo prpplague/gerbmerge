@@ -2,6 +2,7 @@
 import sys
 import glob
 import os
+import site
 
 from distutils.core import setup, Extension
 import distutils.sysconfig
@@ -49,7 +50,7 @@ if sys.platform == 'win32' or ('bdist_wininst' in sys.argv):
 
 else:
   # try to find the library location on this platform
-  DestLib = distutils.sysconfig.get_python_lib()
+  DestLib = site.getsitepackages()[0]
   DestDir = os.path.join(DestLib, 'gerbmerge')
   BinFiles = ['misc/gerbmerge']
   BinDir = distutils.sysconfig.get_config_var('BINDIR')  
@@ -60,8 +61,8 @@ else:
   fid = file('misc/gerbmerge', 'wt')
   fid.write( \
   r"""#!/bin/sh
-python %s/gerbmerge/gerbmerge.py $*
-  """ % DestLib)
+python %s/gerbmerge.py $*
+  """ % DestDir)
   fid.close()
 
 dist=setup (name = "gerbmerge",
